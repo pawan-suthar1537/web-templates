@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 
@@ -13,7 +14,7 @@ const Login = () => {
           <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px48 dark:text-gray-200">
             we focus on helping you find the best templates built by developers  for developers
           </p>
-          <Button>
+          <Button onClick={()=>signIn('google')}>
             Continue with google
           </Button>
         </div>

@@ -17,7 +17,7 @@ const Header = () => {
               <Cloud width={28} height={28} />
             </Badge>
             <span className="self-center text-2xl font-semibold whitespace-nowrap">
-              Andimandi
+            CodeCrafter Hub
             </span>
           </Link>
           {/* menu icon for mobile */}
