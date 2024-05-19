@@ -1,7 +1,10 @@
 import React from "react";
 import { Button } from "./ui/button";
+import { useSession } from "next-auth/react";
 
 const Hero = () => {
+    const { data: session } = useSession();
+
   return (
     <>
       <div className="relative overflow-hidden">
@@ -18,13 +21,25 @@ const Hero = () => {
               </p>
             </div>
             <div className="mt-12 text-center">
-              <Button
+              {
+                session ? (
+                    <Button
+                onClick={() => {
+                  window.location.href = "/dashboard";
+                }}
+              >
+                Share Templates
+              </Button>
+                ) : (
+                    <Button
                 onClick={() => {
                   window.location.href = "/login";
                 }}
               >
                 Sign in to start template sharing
               </Button>
+                )
+              }
             </div>
           </div>
         </div>

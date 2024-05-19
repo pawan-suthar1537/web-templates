@@ -1,9 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 const Login = () => {
+    const { data: session } = useSession();
+    const router = useRouter()
+
+    useEffect(()=>{
+        if(session){
+            router.push('/dashboard')
+        }
+    },[session,router])
+
   return (
     <>
       <section>
@@ -14,9 +24,20 @@ const Login = () => {
           <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px48 dark:text-gray-200">
             we focus on helping you find the best templates built by developers  for developers
           </p>
-          <Button onClick={()=>signIn('google')}>
+          {
+            session ? (
+                <Button onClick={() => {
+                    window.location.href = "/dashboard";
+                  }}>
+            Share Templates
+          </Button>
+
+            ) : (
+                <Button onClick={()=>signIn('google')}>
             Continue with google
           </Button>
+            )
+          }
         </div>
         <img src="/banner.jpg" alt="hero image" className="object-cover max-w-[250px] mx-auto"/>
       </section>
