@@ -11,7 +11,7 @@ const Hero = () => {
         <div className="pb-16 pt-20 sm:pt-24 lg:pb-24  lg:pt-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h1 className="text-4xl text-center font-extrabold tracking-tight text-primary sm:text-5xl lg:text-6xl">
+              <h1 className="text-[31px] text-center font-extrabold tracking-tight text-primary sm:text-5xl lg:text-6xl">
                 Your destination for
                 <span className="text-green-600 mx-1 lg:mx-2">Developer</span>
                 Templates
