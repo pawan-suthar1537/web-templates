@@ -22,7 +22,14 @@ const Header = () => {
           </Link>
           {/* menu icon for mobile */}
           <div className="hidden w-full md:flex justify-between items-center space-x-8 md:w-auto">
-            <Button variant="outline">Login</Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                window.location.href = "/login";
+              }}
+            >
+              Login
+            </Button>
           </div>
         </div>
       </nav>
