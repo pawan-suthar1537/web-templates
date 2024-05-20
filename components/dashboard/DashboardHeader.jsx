@@ -2,6 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import React from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const DashboardHeader = () => {
   const router = useRouter();
@@ -24,9 +25,12 @@ const DashboardHeader = () => {
             <li>
               <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                 <div className="flex flex-col items-center p-3">
-                  <img
+                  <Image
+                  
                     src={session?.user?.image}
                     alt={session?.user?.name}
+                    width={60} // Add width
+                    height={60} // Add height
                     className="w-15 h-15 rounded-full shadow-lg"
                   />
                   <h1 className="mb-1 text-xl font-medium text-gray-900">

@@ -91,6 +91,7 @@ const TemplatePage = () => {
                     <CarouselItem key={img}>
                       <Image
                         src={img}
+                        alt='temp image'
                         width={707}
                         height={400}
                         layout='responsive'

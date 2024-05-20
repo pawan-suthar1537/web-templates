@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Image from "next/image";
 
 const DashboardContent = () => {
   const { data: session } = useSession();
@@ -98,7 +99,9 @@ const DashboardContent = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <img
+                <Image
+                 width={32} // Add width
+                 height={32} // Add height
                   src={template.images[0]}
                   alt="template"
                   className="h-40 w-full rounded-md object-cover object-center border"

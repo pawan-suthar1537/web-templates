@@ -17,7 +17,7 @@ const Hero = () => {
                 Templates
               </h1>
               <p className="mt-6 text-sm lg:text-xl  text-gray-600">
-              Welcome to <span className="text-green-600">CodeCrafter Hub</span>, your ultimate destination for <span className="text-indigo-600">top-quality</span> coding projects and templates. Discover a vast collection of resources crafted by talented developers worldwide. Whether you're looking to kickstart your next project or find <span className="text-red-600">inspiration</span>, DeveloperTemplates offers everything you need to elevate your development game. Explore, download, and connect with a thriving community of innovators today
+              Welcome to <span className="text-green-600">CodeCrafter Hub</span>, your ultimate destination for <span className="text-indigo-600">top-quality</span> coding projects and templates. Discover a vast collection of resources crafted by talented developers worldwide. Whether you are looking to kickstart your next project or find <span className="text-red-600">inspiration</span>, DeveloperTemplates offers everything you need to elevate your development game. Explore, download, and connect with a thriving community of innovators today
               </p>
             </div>
             <div className="mt-12 text-center">

@@ -35,7 +35,7 @@ const Header = () => {
                 }}
                 className="cursor-pointer"
               >
-                <AvatarImage src={session?.user?.image} />
+                <AvatarImage src={session?.user?.image} width={32} height={32} />
               </Avatar>
             ) : (
               <Button

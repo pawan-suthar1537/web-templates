@@ -86,7 +86,7 @@ const Templates = () => {
                 />
               </div>
               <div className="flex items-center gap-x-2 px-4 ">
-                <img src={template.user.image} alt="user image" className='h-8 w-8 rounded-full' />
+                <Image height={40} width={40}  src={template.user.image} alt="user image"  className='h-8 w-8 rounded-full' />
                 <div>
                   <h3 className="text-base font-semibold leading-7 tracking-tight">
                     {template.user.name}

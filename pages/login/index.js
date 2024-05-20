@@ -43,7 +43,7 @@ const Login = () => {
             </Button>
           )}
         </div>
-        <img
+        <Image
           src="/banner.jpg"
           alt="hero image"
           className="object-cover max-w-[250px] mx-auto"

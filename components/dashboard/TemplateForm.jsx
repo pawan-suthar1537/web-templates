@@ -11,6 +11,7 @@ import Spinner from "../Spinner";
 import { ReactSortable } from "react-sortablejs";
 import { Trash } from "lucide-react";
 import axios from "axios";
+import Image from "next/image";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -246,8 +247,11 @@ const TemplateForm = ({
                   images.map((link, index) => (
                     <div className="relative" key={link}>
                       <img
+                     
+                      
                         src={link}
                         alt="template"
+                        
                         className="object-cover h-full w-full rounded-md border p-2 cursor-pointer transition-transform duration-300 transform-gpu group-hover:scale-110"
                       />
                       <div className="absolute top-3 right-3 cursor-pointer opacity-100">
