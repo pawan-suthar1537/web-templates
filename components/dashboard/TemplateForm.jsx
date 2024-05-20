@@ -143,7 +143,7 @@ const TemplateForm = ({
       githubrepolink,
       deployedlink,
       framework,
-      cssframework,
+      css:cssframework,
       usecase,
       user: session.user,
     };
