@@ -118,19 +118,18 @@ const TemplateForm = ({
     const files = ev.target.files;
     if (files && files.length > 0) {
       setuploading(true);
-  
+
       for (const file of files) {
         const data = new FormData();
         data.append("file", file);
-  
+
         const response = await axios.post("/api/upload", data);
         setimages((oldImages) => [...oldImages, response.data.links]);
       }
-  
+
       setuploading(false);
     }
   }
-  
 
   async function createtemplate(ev) {
     ev.preventDefault();
@@ -271,7 +270,9 @@ const TemplateForm = ({
           placeholder="Describe about your template"
           className="flex-grow my-3 h-auto"
         />
-        <Button type="submit">{_id ? "Update Template" : "Create Template"}</Button>
+        <Button type="submit">
+          {_id ? "Update Template" : "Create Template"}
+        </Button>
       </form>
     </>
   );

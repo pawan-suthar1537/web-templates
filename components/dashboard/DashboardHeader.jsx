@@ -35,7 +35,7 @@ const DashboardHeader = () => {
                   <span className="text-sm text-gray-600">
                     {session?.user?.email}
                   </span>
-                  <Button variant="outline" className="w-full mt-2">
+                  <Button variant="outline" className="w-full mt-2" onClick={()=>{window.location.href = "/dashboard"}}>
                     Dashboard
                   </Button>
                   <Button
