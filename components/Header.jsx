@@ -18,7 +18,9 @@ const Header = () => {
             className="flex items-center space-x-3 text-primary font-bold"
           >
             <Badge>
-              <Cloud width={28} height={28} />
+              <Cloud onClick={() => {
+                  window.location.href = "/";
+                }} width={28} height={28} />
             </Badge>
             <span className="self-center text-2xl font-semibold whitespace-nowrap">
               CodeCrafter Hub
