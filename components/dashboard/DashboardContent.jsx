@@ -43,7 +43,7 @@ const DashboardContent = () => {
         settemplates(usertemp);
         setloading(false);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setloading(false);
       }
     };
@@ -61,7 +61,7 @@ const DashboardContent = () => {
       settemplates(usertemp); 
       
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       
     }
   }

@@ -14,7 +14,7 @@ const Templates = () => {
   useEffect(() => {
     axios.get('/api/template')
       .then(response => {
-        console.log(response);
+        // console.log(response);
         setTemplates(response.data);
         setLoading(false);
       })
