@@ -4,8 +4,14 @@ import NextAuth from "next-auth";
 
 import GoogleProvider from "next-auth/providers/google";
 
+const secret = process.env.SECRET;
+
+if (!secret) {
+  console.error("SECRET environment variable is not set");
+}
+
 export default NextAuth({
-    adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(clientPromise),
 
   providers: [
     GoogleProvider({
@@ -14,7 +20,7 @@ export default NextAuth({
     }),
   ],
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: secret,
   callbacks: {
     async jwt(token, user) {
       if (user) {
