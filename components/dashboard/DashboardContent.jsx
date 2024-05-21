@@ -104,6 +104,8 @@ const DashboardContent = () => {
                  height={32} // Add height
                   src={template.images[0]}
                   alt="template"
+                  quality={100}
+                  unoptimized
                   className="h-40 w-full rounded-md object-cover object-center border"
                 />
               </CardContent>
