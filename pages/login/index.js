@@ -44,6 +44,9 @@ const Login = () => {
           )}
         </div>
         <Image
+          height={300}
+          width={300}
+          unoptimized
           src="/banner.jpg"
           alt="hero image"
           className="object-cover max-w-[250px] mx-auto"
