@@ -4,29 +4,19 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import {
   SignedIn,
-  currentUser,
+  useUser,
   UserButton,
 } from "@clerk/nextjs";
 
 const DashboardHeader = () => {
   const router = useRouter();
-  const [user, setUser] = React.useState(null);
-  const [loaded, setLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    currentUser()
-      .then((u) => {
-        setUser(u);
-        setLoaded(true);
-      })
-      .catch(() => setLoaded(true));
-  }, []);
+  const { user, isLoaded } = useUser();
 
   async function logout() {
     await router.push("/");
   }
 
-  if (!loaded) {
+  if (!isLoaded) {
     return null;
   }
 

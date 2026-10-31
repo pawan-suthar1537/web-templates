@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { Button } from "../ui/button";
-import { auth } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Spinner from "../Spinner";
 import { ReactSortable } from "react-sortablejs";
@@ -77,7 +77,8 @@ const TemplateForm = ({
   const [usecase, setusecase] = useState(existingusecase || "");
   const [uploading, setuploading] = useState(false);
 
-  const { userId } = auth();
+  const { user } = useUser();
+  const userId = user?.id;
 
   const [redirect, setredirect] = useState(false);
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import {
   Card,
@@ -25,7 +25,8 @@ import {
 import Image from "next/image";
 
 const DashboardContent = () => {
-  const { userId } = auth();
+  const { user, isLoaded } = useUser();
+  const userId = user?.id;
   const [loading, setloading] = useState(false);
   const [templates, settemplates] = useState([]);
   const [selectedtemplate,setselectedtemplate] = useState(null)
@@ -33,6 +34,8 @@ const DashboardContent = () => {
 
 
   useEffect(() => {
+    if (!isLoaded || !userId) return;
+
     const fetchtemplates = async () => {
       setloading(true);
       try {
@@ -49,7 +52,7 @@ const DashboardContent = () => {
       }
     };
     fetchtemplates();
-  }, [userId]);
+  }, [isLoaded, userId]);
 
 
   const deletetemplate = async () => {

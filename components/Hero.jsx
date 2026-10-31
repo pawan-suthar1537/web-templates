@@ -1,9 +1,10 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { auth } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 const Hero = () => {
-    const { userId } = auth();
+    const { user } = useUser();
+    const userId = user?.id;
 
   return (
     <>
