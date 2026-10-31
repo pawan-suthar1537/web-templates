@@ -2,11 +2,17 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Template } from "@/models/Template";
 
 export default async function handle(req, res) {
-  await mongooseConnect();
-  const { method } = req;
- 
+  try {
+    await mongooseConnect();
+  } catch (error) {
+    console.error("MongoDB connection failed:", error);
+    return res.status(503).json({ error: "Template service is temporarily unavailable" });
+  }
 
-  if (method === "POST") {
+  const { method } = req;
+
+  try {
+   if (method === "POST") {
     const {
       user,
       title,
@@ -28,11 +34,11 @@ export default async function handle(req, res) {
       usecase,
       githubrepolink,
       deployedlink,
-      images: images.map((image) => image.toString()),
+      images: Array.isArray(images) ? images.map((image) => image.toString()) : [],
     });
     res.status(201).json(newTemplate);
   }
-  if (method === "PUT") {
+   if (method === "PUT") {
     const {
       _id,
       user,
@@ -62,7 +68,7 @@ export default async function handle(req, res) {
     res.status(201).json(true);
   }
 
-  if (method === "GET") {
+   if (method === "GET") {
     if (req.query?.id) {
       res.json(await Template.findOne({ _id: req.query.id }));
     } else {
@@ -70,10 +76,14 @@ export default async function handle(req, res) {
       res.status(201).json(templates);
     }
   }
-  if (method === "DELETE") {
+   if (method === "DELETE") {
     if (req.query?.id) {
       await Template.deleteOne({ _id: req.query.id });
       res.json(true);
     }
+   }
+  } catch (error) {
+    console.error(`Template ${method} request failed:`, error);
+    return res.status(500).json({ error: "Unable to process template request" });
   }
 }

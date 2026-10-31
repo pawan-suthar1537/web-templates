@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { auth } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import {
   Card,
@@ -25,7 +25,7 @@ import {
 import Image from "next/image";
 
 const DashboardContent = () => {
-  const { data: session } = useSession();
+  const { userId } = auth();
   const [loading, setloading] = useState(false);
   const [templates, settemplates] = useState([]);
   const [selectedtemplate,setselectedtemplate] = useState(null)
@@ -39,7 +39,7 @@ const DashboardContent = () => {
         const response = await axios.get(`/api/template`);
         // console.log(response)
         const usertemp = response.data.filter(
-          (template) => template.user.id === session.user.id
+          (template) => template.user === userId || template.user?.id === userId
         );
         settemplates(usertemp);
         setloading(false);
@@ -49,15 +49,16 @@ const DashboardContent = () => {
       }
     };
     fetchtemplates();
-  }, [session]);
+  }, [userId]);
 
 
   const deletetemplate = async () => {
+    if (!selectedtemplate) return;
     try {
       await axios.delete(`/api/template?id=${selectedtemplate}`)
       const res = await axios.get(`/api/template`)
       const usertemp = res.data.filter(
-        (template) => template.user.id === session.user.id
+        (template) => template.user === userId || template.user?.id === userId
       );
       settemplates(usertemp); 
       
@@ -79,20 +80,21 @@ const DashboardContent = () => {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <Card
-          className="w-[200px] h-auto bg-gray-100 cursor-pointer mb-3 hover:bg-white"
+          className="min-h-[250px] cursor-pointer border-dashed bg-muted/30 transition-colors hover:border-primary hover:bg-card"
           onClick={() => {
             window.location.href = "/dashboard/projects/new";
           }}
         >
-          <CardContent className="flex flex-col items-center justify-center mt-2 text-center h-full">
-            <h1>New Template</h1>
+          <CardContent className="flex h-full min-h-[250px] flex-col items-center justify-center text-center">
+            <h1 className="font-semibold">New template</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Upload a code snippet</p>
           </CardContent>
         </Card>
         {[
-          ...templates.reverse().map((template) => (
-            <Card key={template.id} className="w-[250px]  bg-white mb-3 ">
+          ...[...templates].reverse().map((template) => (
+            <Card key={template._id || template.id} className="overflow-hidden bg-card transition-shadow hover:shadow-md">
               <CardHeader>
                 <CardTitle className="truncate text-sm">
                   {template.title}
@@ -102,7 +104,7 @@ const DashboardContent = () => {
                 <Image
                  width={32} // Add width
                  height={32} // Add height
-                  src={template.images[0]}
+                   src={template.images?.[0] || "/placeholder.png"}
                   alt="template"
                   quality={100}
                   unoptimized

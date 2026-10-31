@@ -1,39 +1,5 @@
-import clientPromise from "@/lib/mongodb";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import NextAuth from "next-auth";
-
-import GoogleProvider from "next-auth/providers/google";
-
-const secret = process.env.SECRET;
-
-if (!secret) {
-  console.error("SECRET environment variable is not set");
+// Replaced by Clerk authentication.
+// NextAuth route removed — Clerk handles auth via @clerk/nextjs and middleware.
+export default function handler(req, res) {
+  res.status(404).json({ error: "Auth route moved to Clerk" });
 }
-
-export default NextAuth({
-  adapter: MongoDBAdapter(clientPromise),
-
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
-  ],
-
-  secret: secret,
-  callbacks: {
-    async jwt(token, user) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-
-    async session(session, token) {
-      if (token && token.id) {
-        session.user.id = token.id;
-      }
-      return session;
-    },
-  },
-});

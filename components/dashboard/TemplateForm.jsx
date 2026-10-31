@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { Button } from "../ui/button";
-import { useSession } from "next-auth/react";
+import { auth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Spinner from "../Spinner";
 import { ReactSortable } from "react-sortablejs";
@@ -77,12 +77,10 @@ const TemplateForm = ({
   const [usecase, setusecase] = useState(existingusecase || "");
   const [uploading, setuploading] = useState(false);
 
-  const { data: session } = useSession();
+  const { userId } = auth();
 
   const [redirect, setredirect] = useState(false);
   const router = useRouter();
-
-  const UploadImages = [];
 
   function updateImagesOrder(images) {
     setimages(images);
@@ -119,24 +117,24 @@ const TemplateForm = ({
     const files = ev.target.files;
     if (files && files.length > 0) {
       setuploading(true);
-
-      for (const file of files) {
-        const data = new FormData();
-        data.append("file", file);
-
-        const response = await axios.post("/api/upload", data);
-        setimages((oldImages) => [...oldImages, response.data.links]);
+      try {
+        for (const file of files) {
+          const data = new FormData();
+          data.append("file", file);
+          const response = await axios.post("/api/upload", data);
+          setimages((oldImages) => [...oldImages, ...(response.data.links || [])]);
+        }
+      } catch (error) {
+        console.error("Image upload failed:", error);
+      } finally {
+        setuploading(false);
+        ev.target.value = "";
       }
-
-      setuploading(false);
     }
   }
 
   async function createtemplate(ev) {
     ev.preventDefault();
-    if (uploading) {
-      await Promise.all(UploadImages);
-    }
     const data = {
       title,
       description,
@@ -146,7 +144,7 @@ const TemplateForm = ({
       framework,
       css:cssframework,
       usecase,
-      user: session.user,
+      user: userId,
     };
 
     try {
@@ -168,16 +166,16 @@ const TemplateForm = ({
 
   return (
     <>
-      <form action="" className="p-3 space-y-6" onSubmit={createtemplate}>
+      <form action="" className="space-y-6 rounded-2xl border border-border bg-card p-4 shadow-xs sm:p-6" onSubmit={createtemplate}>
         <Input
           type="text"
           placeholder="Template Name"
           value={title}
           onChange={(e) => settitle(e.target.value)}
         />
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <select
-            className="border rounded-md px-3 p-2 w-full"
+            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/10"
             value={framework}
             onChange={(e) => setframework(e.target.value)}
           >
@@ -189,7 +187,7 @@ const TemplateForm = ({
             ))}
           </select>
           <select
-            className="border rounded-md px-3 p-2 w-full"
+            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/10"
             value={cssframework}
             onChange={(e) => setcssframework(e.target.value)}
           >
@@ -201,7 +199,7 @@ const TemplateForm = ({
             ))}
           </select>
           <select
-            className="border rounded-md px-3 p-2 w-full"
+            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/10"
             value={usecase}
             onChange={(e) => setusecase(e.target.value)}
           >
@@ -213,7 +211,7 @@ const TemplateForm = ({
             ))}
           </select>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input
             type="url"
             placeholder="Github Repository Link"
@@ -228,8 +226,8 @@ const TemplateForm = ({
           />
         </div>
         <div className="grid w-full items-center gap-2">
-          <Label>Template Images</Label>
-          <Input type="file" onClick={upload} />
+          <Label htmlFor="template-images">Template images</Label>
+          <Input id="template-images" type="file" accept="image/*" multiple onChange={upload} />
           {/* selected images yha bshow krna hai  */}
           {uploading && (
             <div>
@@ -241,7 +239,7 @@ const TemplateForm = ({
               <ReactSortable
                 list={Array.isArray(images) ? images : []}
                 setList={updateImagesOrder}
-                className="grid grid-cols-3 gap-4"
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
               >
                 {Array.isArray(images) &&
                   images.map((link, index) => (
@@ -255,7 +253,7 @@ const TemplateForm = ({
                         className="object-cover h-full w-full rounded-md border p-2 cursor-pointer transition-transform duration-300 transform-gpu group-hover:scale-110"
                       />
                       <div className="absolute top-3 right-3 cursor-pointer opacity-100">
-                        <Button onClick={() => handledeleteimage(index)}>
+                          <Button type="button" size="icon" variant="destructive" aria-label={`Delete image ${index + 1}`} onClick={() => handledeleteimage(index)}>
                           <Trash className="w-4 h-4 bg-white text-red-600 rounded-full p-1" />
                         </Button>
                       </div>

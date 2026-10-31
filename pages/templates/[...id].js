@@ -21,10 +21,10 @@ const TemplatePage = () => {
     if (!id) {
       return
     }
-    axios.get('/api/template?id=' + id).then(response => {
-      setTemplateInfo(response.data);
-      setLoading(false)
-    })
+    axios.get('/api/template?id=' + id)
+      .then(response => setTemplateInfo(response.data))
+      .catch(error => console.error('Template fetch failed:', error))
+      .finally(() => setLoading(false));
 
   }, [id]);
 
@@ -37,66 +37,70 @@ const TemplatePage = () => {
     </>
   }
 
+  if (!templateInfo) {
+    return <div className="mx-auto max-w-3xl px-6 py-24 text-center"><h1 className="text-2xl font-bold">Template not found</h1><Link className="mt-4 inline-block text-primary hover:underline" href="/">Return home</Link></div>;
+  }
+
   return <>
-    <div className="mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <div className="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
       <section className="pb-24 pt-6">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
-          <div className="lg:block fixed top-36">
-            <Link href={'/'} className='flex text-md items-center mb-3 text-gray-500'>
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-xs lg:sticky lg:top-24 lg:h-fit">
+            <Link href={'/'} className='mb-5 flex items-center text-sm text-muted-foreground hover:text-foreground'>
               <MoveLeft className='mr-2' />
               Go back
             </Link>
-            <Badge variant={'outline'} className={'flex items-center justify-start gap-2'}>
-              <Avatar className='my-4' size='large'>
-                <AvatarImage src={templateInfo?.user.image} alt={templateInfo?.user.name} />
+            <Badge variant={'outline'} className={'flex items-center justify-start gap-2 px-3 py-2'}>
+              <Avatar className='h-9 w-9'>
+                <AvatarImage src={typeof templateInfo?.user === 'object' ? templateInfo?.user?.image : ''} alt={typeof templateInfo?.user === 'object' ? templateInfo?.user?.name : 'Developer'} />
               </Avatar>
-              <h1 className="text-xl font-bold text-gray-700">
-                {templateInfo?.user.name}
+              <h1 className="text-sm font-semibold text-foreground">
+                {typeof templateInfo?.user === 'object' ? templateInfo?.user?.name : 'Developer'}
               </h1>
             </Badge>
-            <h2 className="text-2xl font-semibold my-6">
+            <h2 className="my-6 text-2xl font-semibold">
               {templateInfo?.title}
             </h2>
-            <div className="border-b p-3 text-gary-500 text-md flex justify-between">
-              <p className="text-md font-medium">Framework</p>
-              <p className="text-md text-gray-600">{templateInfo?.framework}</p>
+            <div className="flex justify-between border-b border-border p-3 text-sm">
+              <p className="font-medium">Framework</p>
+              <p className="text-muted-foreground">{templateInfo?.framework}</p>
             </div>
-            <div className="border-b p-3 text-gary-500 text-md flex justify-between">
-              <p className="text-md font-medium">Use Case</p>
-              <p className="text-md text-gray-600">{templateInfo?.usecase}</p>
+            <div className="flex justify-between border-b border-border p-3 text-sm">
+              <p className="font-medium">Use Case</p>
+              <p className="text-muted-foreground">{templateInfo?.usecase}</p>
             </div>
-            <div className="border-b p-3 text-gary-500 text-md flex justify-between">
-              <p className="text-md font-medium">Css </p>
-              <p className="text-md text-gray-600">{templateInfo?.css}</p>
+            <div className="flex justify-between border-b border-border p-3 text-sm">
+              <p className="font-medium">CSS</p>
+              <p className="text-muted-foreground">{templateInfo?.css}</p>
             </div>
 
-            <div className="flex gap-3 justify-center text-center mt-6">
-              <a href={templateInfo?.githubrepolink} target='_blank' style={{ width: "10rem" }}>
-                <Button variant='outline'>
+            <div className="mt-6 flex gap-3 text-center">
+              <a href={templateInfo?.githubrepolink} target='_blank' rel="noreferrer" className="flex-1">
+                <Button className="w-full" variant='outline'>
                   View Code
                 </Button>
               </a>
-              <a href={templateInfo?.deployedlink} target='_blank' style={{ width: "10rem" }}>
-                <Button >
+              <a href={templateInfo?.deployedlink} target='_blank' rel="noreferrer" className="flex-1">
+                <Button className="w-full">
                   Live Preview
                 </Button>
               </a>
             </div>
           </div>
-          <div className="col-span-2 border-l border-gray-300 sm:ml-[400px] w-full">
-            <div className="px-8">
+          <div className="w-full lg:col-span-2">
+            <div className="rounded-2xl border border-border bg-card p-3 shadow-xs sm:p-6">
               <Carousel className='col-span-2'>
                 <CarouselContent>
-                  {templateInfo?.images.map((img) => (
+                  {(templateInfo?.images || []).map((img) => (
                     <CarouselItem key={img}>
                       <Image
                         src={img}
                         alt='temp image'
                         width={707}
                         height={400}
-                        layout='responsive'
+                         style={{ width: '100%', height: 'auto' }}
                         quality={100}
-                        className='mb-6 mt-2 w-full object-cover rounded-md shadow'
+                         className='mb-6 mt-2 w-full rounded-xl object-cover shadow-sm'
                       />
 
                     </CarouselItem>
@@ -105,7 +109,7 @@ const TemplatePage = () => {
                 <CarouselPrevious className='absolute top-1/2 left-0 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 cursor-pointer' />
                 <CarouselNext className='absolute top-1/2 right-0 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 cursor-pointer' />
               </Carousel>
-              <div className="id_details" dangerouslySetInnerHTML={{__html: templateInfo?.description}}/>
+              <div className="prose max-w-none text-muted-foreground" dangerouslySetInnerHTML={{__html: templateInfo?.description}}/>
             </div>
           </div>
         </div>
