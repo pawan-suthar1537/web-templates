@@ -23,7 +23,7 @@ const Templates = ({ onReady }) => {
         setLoading(false);
         onReady?.(false);
       });
-  }, []);
+  }, [onReady]);
 
   if (!loading && templates.length === 0) {
     return <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">No templates available yet.</div>;

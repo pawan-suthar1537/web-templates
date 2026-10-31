@@ -244,13 +244,12 @@ const TemplateForm = ({
                 {Array.isArray(images) &&
                   images.map((link, index) => (
                     <div className="relative" key={link}>
-                      <img
-                     
-                      
+                      <Image
                         src={link}
-                        alt="template"
-                        
-                        className="object-cover h-full w-full rounded-md border p-2 cursor-pointer transition-transform duration-300 transform-gpu group-hover:scale-110"
+                        alt={`Template preview ${index + 1}`}
+                        width={800}
+                        height={600}
+                        className="h-full w-full rounded-md border object-cover p-2 transition-transform duration-300 group-hover:scale-110"
                       />
                       <div className="absolute top-3 right-3 cursor-pointer opacity-100">
                           <Button type="button" size="icon" variant="destructive" aria-label={`Delete image ${index + 1}`} onClick={() => handledeleteimage(index)}>
