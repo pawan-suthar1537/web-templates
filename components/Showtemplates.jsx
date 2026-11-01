@@ -12,22 +12,28 @@ const Templates = ({ onReady }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    let active = true;
+
     axios.get('/api/template')
       .then(response => {
-        setTemplates(response.data);
+        const nextTemplates = Array.isArray(response.data) ? response.data : [];
+        if (!active) return;
+        setTemplates(nextTemplates);
         setLoading(false);
-        onReady?.(response.data.length > 0);
+        onReady?.(nextTemplates.length > 0);
       })
       .catch(error => {
         console.error("Error fetching templates:", error);
+        if (!active) return;
+        setTemplates([]);
         setLoading(false);
         onReady?.(false);
       });
-  }, [onReady]);
 
-  if (!loading && templates.length === 0) {
-    return <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">No templates available yet.</div>;
-  }
+    return () => {
+      active = false;
+    };
+  }, [onReady]);
 
   const filterTemplates = templates.filter(template => {
     const query = searchQuery.toLowerCase();
@@ -85,6 +91,12 @@ const Templates = ({ onReady }) => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {!loading && templates.length === 0 && (
+        <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">
+          No templates available yet.
         </div>
       )}
 

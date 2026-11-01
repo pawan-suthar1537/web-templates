@@ -103,6 +103,10 @@ export default function Home() {
 
       // Stats reveal
       gsap.from("[data-stat-card]", {
+        // Keep content visible if a deployment/browser cannot create a
+        // ScrollTrigger. Without this, gsap.from applies opacity: 0
+        // immediately and the cards remain blank forever.
+        immediateRender: false,
         scrollTrigger: {
           trigger: document.querySelector("[data-stats-section]"),
           start: "top 85%",
@@ -117,6 +121,7 @@ export default function Home() {
 
       // Features reveal
       gsap.from("[data-feature-card]", {
+        immediateRender: false,
         scrollTrigger: {
           trigger: document.querySelector("[data-features-section]"),
           start: "top 85%",
@@ -131,6 +136,7 @@ export default function Home() {
 
       // Showcase reveal
       gsap.from("[data-showcase-item]", {
+        immediateRender: false,
         scrollTrigger: {
           trigger: document.querySelector("[data-showcase-section]"),
           start: "top 85%",
@@ -145,6 +151,7 @@ export default function Home() {
 
       // CTA reveal
       gsap.from("[data-cta-el]", {
+        immediateRender: false,
         scrollTrigger: {
           trigger: document.querySelector("[data-cta-section]"),
           start: "top 85%",
