@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Showtemplates from "@/components/Showtemplates";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useUser } from "@clerk/nextjs";
 import {
   Cloud,
   Zap,
@@ -15,6 +16,8 @@ import {
   ShieldCheck,
   BarChart3,
   Box,
+  Plus,
+  LayoutDashboard,
 } from "lucide-react";
 
 const ICON_MAP = {
@@ -46,6 +49,8 @@ export default function Home() {
   const heroIconRef = useRef(null);
   const heroCopyRef = useRef(null);
   const [templateCount, setTemplateCount] = useState(0);
+  const { user, isLoaded } = useUser();
+  const isSignedIn = isLoaded && !!user;
 
   useEffect(() => {
     let active = true;
@@ -307,20 +312,48 @@ export default function Home() {
             minutes, not weeks.
           </p>
           <div data-hero-cta className="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-5">
-            <Button
-              asChild
-              size="lg"
-              className="w-full rounded-full border-0 px-8 py-4 text-base font-bold shadow-lg shadow-primary/25 transition-[transform,box-shadow] hover:scale-105 hover:shadow-primary/35 sm:w-auto sm:px-10 sm:text-lg"
-            >
-              <Link href="/login">Get started free</Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full rounded-full border border-border px-8 py-4 text-base font-bold transition-colors hover:bg-muted sm:w-auto sm:px-10 sm:text-lg"
-            >
-              <Link href="#featured-templates">Browse templates</Link>
-            </Button>
+            {isSignedIn ? (
+              <>
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full rounded-full border-0 px-8 py-4 text-base font-bold shadow-lg shadow-primary/25 transition-[transform,box-shadow] hover:scale-105 hover:shadow-primary/35 sm:w-auto sm:px-10 sm:text-lg"
+                >
+                  <Link href="/dashboard">
+                    <LayoutDashboard size={18} className="mr-2" />
+                    Go to Dashboard
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="w-full rounded-full border border-primary px-8 py-4 text-base font-bold transition-colors hover:bg-primary/5 sm:w-auto sm:px-10 sm:text-lg"
+                >
+                  <Link href="/dashboard/projects/new">
+                    <Plus size={18} className="mr-2" />
+                    + Upload Template
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full rounded-full border-0 px-8 py-4 text-base font-bold shadow-lg shadow-primary/25 transition-[transform,box-shadow] hover:scale-105 hover:shadow-primary/35 sm:w-auto sm:px-10 sm:text-lg"
+                >
+                  <Link href="/login">Get started free</Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full rounded-full border border-border px-8 py-4 text-base font-bold transition-colors hover:bg-muted sm:w-auto sm:px-10 sm:text-lg"
+                >
+                  <Link href="#featured-templates">Browse templates</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
@@ -507,13 +540,41 @@ export default function Home() {
             today.
           </p>
           <div data-cta-el className="flex flex-col sm:flex-row items-center justify-center gap-5">
-            <Button
-              asChild
-              size="lg"
-              className="rounded-full px-12 py-5 font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 hover:shadow-primary/40 transition-all border-0"
-            >
-              <Link href="/login">Get started free</Link>
-            </Button>
+            {isSignedIn ? (
+              <>
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-full px-12 py-5 font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 hover:shadow-primary/40 transition-all border-0"
+                >
+                  <Link href="/dashboard">
+                    <LayoutDashboard size={20} className="mr-2" />
+                    Go to Dashboard
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="rounded-full px-12 py-5 font-bold text-lg transition-all border-primary hover:bg-primary/5"
+                >
+                  <Link href="/dashboard/projects/new">
+                    <Plus size={20} className="mr-2" />
+                    + Upload Template
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-full px-12 py-5 font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 hover:shadow-primary/40 transition-all border-0"
+                >
+                  <Link href="/login">Get started free</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </section>

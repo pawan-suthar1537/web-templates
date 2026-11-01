@@ -2,6 +2,8 @@ import React from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import Link from "next/link";
+import { LayoutDashboard, Plus } from "lucide-react";
 import {
   SignedIn,
   useUser,
@@ -11,10 +13,6 @@ import {
 const DashboardHeader = () => {
   const router = useRouter();
   const { user, isLoaded } = useUser();
-
-  async function logout() {
-    await router.push("/");
-  }
 
   if (!isLoaded) {
     return null;
@@ -49,16 +47,26 @@ const DashboardHeader = () => {
                         </span>
                       </>
                     )}
-                    <Button
-                      variant="outline"
-                      className="mt-4 w-full"
-                      onClick={() => {
-                        window.location.href = "/dashboard";
-                      }}
-                    >
-                      Dashboard
-                    </Button>
-                    <UserButton />
+                    <div className="w-full space-y-2 mt-4">
+                      <Link href="/dashboard" className="block">
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start"
+                        >
+                          <LayoutDashboard size={18} className="mr-2" />
+                          My Templates
+                        </Button>
+                      </Link>
+                      <Link href="/dashboard/projects/new" className="block">
+                        <Button
+                          className="w-full justify-start bg-primary hover:bg-primary/90"
+                        >
+                          <Plus size={18} className="mr-2" />
+                          Upload New Template
+                        </Button>
+                      </Link>
+                    </div>
+                    <UserButton afterSignOutUrl="/" />
                   </div>
                 </div>
               </SignedIn>

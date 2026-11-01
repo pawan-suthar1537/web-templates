@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { Badge } from "./ui/badge";
-import { Cloud } from "lucide-react";
+import { Cloud, LayoutDashboard, Plus } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
@@ -40,7 +40,21 @@ const Header = () => {
               </SignUpButton>
             </SignedOut>
             <SignedIn>
-              <UserButton />
+              <Link
+                href="/dashboard/projects/new"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+              >
+                <Plus size={16} />
+                Upload
+              </Link>
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                <LayoutDashboard size={16} />
+                Dashboard
+              </Link>
+              <UserButton afterSignOutUrl="/" />
             </SignedIn>
           </div>
         </div>
