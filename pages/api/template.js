@@ -76,7 +76,11 @@ export default async function handle(req, res) {
 
    if (method === "GET") {
     if (req.query?.id) {
-      return res.status(200).json(await Template.findOne({ _id: req.query.id }).lean());
+      const template = await Template.findOne({ _id: req.query.id }).lean();
+      if (!template) {
+        return res.status(404).json({ error: "Template not found" });
+      }
+      return res.status(200).json(template);
     } else {
       const templates = await Template.find().sort({ createdAt: -1 }).lean();
       return res.status(200).json(templates);

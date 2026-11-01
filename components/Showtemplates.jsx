@@ -9,6 +9,7 @@ import Image from 'next/image';
 const Templates = ({ onReady }) => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -19,6 +20,7 @@ const Templates = ({ onReady }) => {
         const nextTemplates = Array.isArray(response.data) ? response.data : [];
         if (!active) return;
         setTemplates(nextTemplates);
+        setError('');
         setLoading(false);
         onReady?.(nextTemplates.length > 0);
       })
@@ -26,6 +28,7 @@ const Templates = ({ onReady }) => {
         console.error("Error fetching templates:", error);
         if (!active) return;
         setTemplates([]);
+        setError('Templates are temporarily unavailable. Please try again shortly.');
         setLoading(false);
         onReady?.(false);
       });
@@ -49,6 +52,11 @@ const Templates = ({ onReady }) => {
   });
 
   const featuredTemplates = filterTemplates.slice(0, 8);
+
+  const imageSource = (image) => {
+    if (typeof image !== 'string' || !image.trim()) return '/banner.jpg';
+    return image;
+  };
 
   const getUserImage = (user) => {
     if (!user) return 'https://ui-avatars.com/api/?name=User&background=0f172a&color=fff';
@@ -96,7 +104,7 @@ const Templates = ({ onReady }) => {
 
       {!loading && templates.length === 0 && (
         <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">
-          No templates available yet.
+          {error || 'No templates available yet.'}
         </div>
       )}
 
@@ -111,7 +119,7 @@ const Templates = ({ onReady }) => {
               <div className="relative h-[200px] w-full overflow-hidden bg-muted">
                 <Image
                   alt={template.title || 'template'}
-                  src={template.images?.[0] || 'https://picsum.photos/seed/placeholder/800/600'}
+                  src={imageSource(template.images?.[0])}
                   className='object-cover group-hover:scale-105 transition-transform duration-500'
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

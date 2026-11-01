@@ -101,68 +101,45 @@ export default function Home() {
         });
       }
 
-      // Stats reveal
-      gsap.from("[data-stat-card]", {
-        // Keep content visible if a deployment/browser cannot create a
-        // ScrollTrigger. Without this, gsap.from applies opacity: 0
-        // immediately and the cards remain blank forever.
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: document.querySelector("[data-stats-section]"),
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-        y: reduceMotion ? 0 : 50,
-        opacity: reduceMotion ? 1 : 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: "power3.out",
-      });
+      // A page can be opened at a hash, restored at a previous scroll
+      // position, or hydrated after the section has already crossed its
+      // trigger. In those cases gsap.from used to leave the content at its
+      // hidden starting state. Only create a reveal for sections below the
+      // current viewport; sections already visible are explicitly left
+      // visible.
+      const reveal = (selector, triggerSelector, distance, duration, stagger) => {
+        const elements = gsap.utils.toArray(selector);
+        const trigger = document.querySelector(triggerSelector);
 
-      // Features reveal
-      gsap.from("[data-feature-card]", {
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: document.querySelector("[data-features-section]"),
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-        y: reduceMotion ? 0 : 50,
-        opacity: reduceMotion ? 1 : 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power3.out",
-      });
+        if (!elements.length || !trigger || reduceMotion) {
+          gsap.set(elements, { clearProps: "opacity,transform" });
+          return;
+        }
 
-      // Showcase reveal
-      gsap.from("[data-showcase-item]", {
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: document.querySelector("[data-showcase-section]"),
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-        y: reduceMotion ? 0 : 50,
-        opacity: reduceMotion ? 1 : 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-      });
+        if (trigger.getBoundingClientRect().top <= window.innerHeight * 0.85) {
+          gsap.set(elements, { opacity: 1, y: 0 });
+          return;
+        }
 
-      // CTA reveal
-      gsap.from("[data-cta-el]", {
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: document.querySelector("[data-cta-section]"),
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-        y: reduceMotion ? 0 : 40,
-        opacity: reduceMotion ? 1 : 0,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: "power3.out",
-      });
+        gsap.from(elements, {
+          immediateRender: false,
+          scrollTrigger: {
+            trigger,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+          y: distance,
+          opacity: 0,
+          duration,
+          stagger,
+          ease: "power3.out",
+        });
+      };
+
+      reveal("[data-stat-card]", "[data-stats-section]", 50, 0.8, 0.12);
+      reveal("[data-feature-card]", "[data-features-section]", 50, 0.8, 0.15);
+      reveal("[data-showcase-item]", "[data-showcase-section]", 50, 0.8, 0.1);
+      reveal("[data-cta-el]", "[data-cta-section]", 40, 0.7, 0.1);
     });
 
     // Pointer-reactive hero motion. This stays local to the hero and does not
