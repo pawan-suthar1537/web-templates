@@ -84,6 +84,19 @@ const TemplateForm = ({
   const [redirect, setredirect] = useState(false);
   const router = useRouter();
 
+  const getImageUrl = (item) => {
+    if (!item) return "";
+    if (typeof item === "string") return item;
+    if (typeof item === "object") {
+      if (typeof item.url === "string") return item.url;
+      if (typeof item.id === "string" && (item.id.startsWith("http://") || item.id.startsWith("https://") || item.id.startsWith("/"))) {
+        return item.id;
+      }
+      return item.toString ? item.toString() : String(item);
+    }
+    return String(item);
+  };
+
   function updateImagesOrder(images) {
     setimages(images);
   }
@@ -120,7 +133,7 @@ const TemplateForm = ({
     const data = {
       title,
       description,
-      images: images.map((image) => image.toString()),
+      images: images.map((image) => getImageUrl(image)).filter(Boolean),
       githubrepolink,
       deployedlink,
       framework,
@@ -270,27 +283,33 @@ const TemplateForm = ({
                 className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
               >
                 {Array.isArray(images) &&
-                  images.map((link, index) => (
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-border bg-muted group" key={link}>
-                      <Image
-                        src={link}
-                        alt={`Template preview ${index + 1}`}
-                        fill
-                        unoptimized
-                        className="object-cover"
-                      />
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="destructive"
-                        className="absolute top-2.5 right-2.5 h-7 w-7 rounded-full shadow-md"
-                        aria-label={`Delete image ${index + 1}`}
-                        onClick={() => handledeleteimage(index)}
+                  images.map((link, index) => {
+                    const url = getImageUrl(link);
+                    return (
+                      <div
+                        className="relative aspect-video overflow-hidden rounded-xl border border-border bg-muted group"
+                        key={url || index}
                       >
-                        <Trash size={13} />
-                      </Button>
-                    </div>
-                  ))}
+                        <Image
+                          src={url}
+                          alt={`Template preview ${index + 1}`}
+                          fill
+                          unoptimized
+                          className="object-cover"
+                        />
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="destructive"
+                          className="absolute top-2.5 right-2.5 h-7 w-7 rounded-full shadow-md transition-opacity hover:opacity-100"
+                          aria-label={`Delete image ${index + 1}`}
+                          onClick={() => handledeleteimage(index)}
+                        >
+                          <Trash size={13} />
+                        </Button>
+                      </div>
+                    );
+                  })}
               </ReactSortable>
             </div>
           )}

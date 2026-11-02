@@ -31,9 +31,9 @@ export default async function handle(req, res) {
 
     const link = result.secure_url;
     links.push(link);
-
-    return res.json({ links });
   }
+
+  return res.json({ links });
 }
 
 export const config = {
