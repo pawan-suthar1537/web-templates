@@ -74,8 +74,8 @@ const Templates = ({ onReady }) => {
     <div>
       <div className="flex flex-col items-start justify-between gap-4 mb-8 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <SquareDot className='text-indigo-600' size={22} />
-          <h3 className="text-xl font-bold">Latest Templates</h3>
+          <SquareDot className='text-primary' size={22} />
+          <h3 className="text-xl font-bold tracking-tight text-foreground">Latest Templates</h3>
         </div>
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
@@ -133,7 +133,8 @@ const Templates = ({ onReady }) => {
                     width={28}
                     src={getUserImage(template.user)}
                     alt="user"
-                    className='h-7 w-7 rounded-full border border-border'
+                    unoptimized
+                    className='h-7 w-7 rounded-full border border-border object-cover'
                   />
                   <span className="text-xs text-muted-foreground font-medium truncate">
                     {getUserName(template.user)}

@@ -15,8 +15,10 @@ export default function LoginPage() {
   if (!isLoaded || isSignedIn) return null;
 
   return (
-    <Suspense>
-      <SignIn />
-    </Suspense>
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4">
+      <Suspense fallback={null}>
+        <SignIn afterSignInUrl="/dashboard" fallbackRedirectUrl="/dashboard" />
+      </Suspense>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/router";
 import { Badge } from "./ui/badge";
 import { Cloud, LayoutDashboard, Plus } from "lucide-react";
 import {
@@ -11,6 +12,9 @@ import {
 } from "@clerk/nextjs";
 
 const Header = () => {
+  const router = useRouter();
+  const isDashboard = router.pathname === "/dashboard" || router.pathname.startsWith("/dashboard");
+
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/80 backdrop-blur-xl">
@@ -32,10 +36,10 @@ const Header = () => {
           {/* menu icon for mobile */}
           <div className="flex items-center gap-2 md:gap-3">
             <SignedOut>
-              <SignInButton mode="redirect">
+              <SignInButton mode="redirect" afterSignInUrl="/dashboard" fallbackRedirectUrl="/dashboard">
                 <button className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Log in</button>
               </SignInButton>
-              <SignUpButton mode="redirect">
+              <SignUpButton mode="redirect" afterSignUpUrl="/dashboard" fallbackRedirectUrl="/dashboard">
                 <button className="rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium shadow-xs transition-colors hover:bg-accent">Sign up</button>
               </SignUpButton>
             </SignedOut>
@@ -47,13 +51,15 @@ const Header = () => {
                 <Plus size={16} />
                 Upload
               </Link>
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                <LayoutDashboard size={16} />
-                Dashboard
-              </Link>
+              {!isDashboard && (
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </Link>
+              )}
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
           </div>

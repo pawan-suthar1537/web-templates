@@ -15,8 +15,8 @@ export default function SignInPage() {
   if (!isLoaded || isSignedIn) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <SignIn />
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4">
+      <SignIn afterSignInUrl="/dashboard" fallbackRedirectUrl="/dashboard" />
     </div>
   );
 }

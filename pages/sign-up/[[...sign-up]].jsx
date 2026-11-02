@@ -15,8 +15,8 @@ export default function SignUpPage() {
   if (!isLoaded || isSignedIn) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <SignUp />
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4">
+      <SignUp afterSignUpUrl="/dashboard" fallbackRedirectUrl="/dashboard" />
     </div>
   );
 }

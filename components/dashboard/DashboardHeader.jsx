@@ -7,7 +7,6 @@ import { LayoutDashboard, Plus } from "lucide-react";
 import {
   SignedIn,
   useUser,
-  UserButton,
 } from "@clerk/nextjs";
 
 const DashboardHeader = () => {
@@ -17,6 +16,12 @@ const DashboardHeader = () => {
   if (!isLoaded) {
     return null;
   }
+
+  const userAvatar = user?.imageUrl;
+  const displayName = user?.fullName || user?.username || user?.firstName || "User";
+  const userEmail = user?.primaryEmailAddress?.emailAddress;
+  const isMyTemplatesActive = router.pathname === "/dashboard";
+  const isNewTemplateActive = router.pathname === "/dashboard/projects/new";
 
   return (
     <>
@@ -32,41 +37,52 @@ const DashboardHeader = () => {
                   <div className="flex flex-col items-center p-5 text-center">
                     {user && (
                       <>
-                        <Image
-                          src={user.imageUrl}
-                          alt={user.fullName}
-                          width={60}
-                          height={60}
-                          className="h-16 w-16 rounded-full border border-border shadow-sm"
-                        />
+                        {userAvatar ? (
+                          <Image
+                            src={userAvatar}
+                            alt={displayName}
+                            width={64}
+                            height={64}
+                            unoptimized
+                            className="h-16 w-16 rounded-full border border-border shadow-sm object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-muted text-lg font-semibold text-foreground shadow-sm">
+                            {displayName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                         <h1 className="mb-1 mt-3 text-lg font-semibold text-foreground">
-                          {user.fullName}
+                          {displayName}
                         </h1>
-                        <span className="text-sm text-muted-foreground">
-                          {user.primaryEmailAddress?.emailAddress}
+                        <span className="text-sm text-muted-foreground break-all max-w-[220px] truncate block">
+                          {userEmail}
                         </span>
                       </>
                     )}
-                    <div className="w-full space-y-2 mt-4">
+                    <div className="w-full space-y-2.5 mt-5">
                       <Link href="/dashboard" className="block">
                         <Button
-                          variant="outline"
-                          className="w-full justify-start"
+                          variant={isMyTemplatesActive ? "default" : "outline"}
+                          className={`w-full justify-start transition-colors ${
+                            isMyTemplatesActive ? "shadow-sm font-semibold" : "text-muted-foreground hover:text-foreground"
+                          }`}
                         >
-                          <LayoutDashboard size={18} className="mr-2" />
+                          <LayoutDashboard size={18} className="mr-2.5" />
                           My Templates
                         </Button>
                       </Link>
                       <Link href="/dashboard/projects/new" className="block">
                         <Button
-                          className="w-full justify-start bg-primary hover:bg-primary/90"
+                          variant={isNewTemplateActive ? "default" : "outline"}
+                          className={`w-full justify-start transition-colors ${
+                            isNewTemplateActive ? "shadow-sm font-semibold" : "text-muted-foreground hover:text-foreground"
+                          }`}
                         >
-                          <Plus size={18} className="mr-2" />
+                          <Plus size={18} className="mr-2.5" />
                           Upload New Template
                         </Button>
                       </Link>
                     </div>
-                    <UserButton afterSignOutUrl="/" />
                   </div>
                 </div>
               </SignedIn>

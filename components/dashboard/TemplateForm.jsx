@@ -76,6 +76,7 @@ const TemplateForm = ({
   const [cssframework, setcssframework] = useState(existingcss || "");
   const [usecase, setusecase] = useState(existingusecase || "");
   const [uploading, setuploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { user } = useUser();
   const userId = user?.id;
@@ -92,27 +93,6 @@ const TemplateForm = ({
     updateImages.splice(index, 1);
     setimages(updateImages);
   }
-
-  // async function upload(ev) {
-  //   const files = ev.target?.files;
-  //   if (files && files.length > 0) {
-  //     setuploading(true);
-
-  //     for (const file of files) {
-  //       const data = new FormData();
-  //       data.append("file", file);
-
-  //       UploadImages.push(
-  //         axios.post("/api/upload", data).then((res) => {
-  //           setimages((oldImages) => [...oldImages, ...res.data.links]);
-  //         })
-  //       );
-  //     }
-
-  //     await Promise.all(UploadImages);
-  //     setuploading(false);
-  //   }
-  // }
 
   async function upload(ev) {
     const files = ev.target.files;
@@ -136,6 +116,7 @@ const TemplateForm = ({
 
   async function createtemplate(ev) {
     ev.preventDefault();
+    setIsSubmitting(true);
     const data = {
       title,
       description,
@@ -143,7 +124,7 @@ const TemplateForm = ({
       githubrepolink,
       deployedlink,
       framework,
-      css:cssframework,
+      css: cssframework,
       usecase,
       user: userId,
     };
@@ -157,6 +138,8 @@ const TemplateForm = ({
       setredirect(true);
     } catch (error) {
       console.error("Error creating template:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -165,78 +148,122 @@ const TemplateForm = ({
     return null;
   }
 
+  const selectClassName = "h-10 w-full rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/20";
+
   return (
     <>
-      <form action="" className="space-y-6 rounded-2xl border border-border bg-card p-4 shadow-xs sm:p-6" onSubmit={createtemplate}>
-        <Input
-          type="text"
-          placeholder="Template Name"
-          value={title}
-          onChange={(e) => settitle(e.target.value)}
-        />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <select
-            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/10"
-            value={framework}
-            onChange={(e) => setframework(e.target.value)}
-          >
-            <option value="">Select Framework</option>
-            {Webframeworks.map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-          </select>
-          <select
-            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/10"
-            value={cssframework}
-            onChange={(e) => setcssframework(e.target.value)}
-          >
-            <option value="">Select Css</option>
-            {CSSFrameworks.map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-          </select>
-          <select
-            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/10"
-            value={usecase}
-            onChange={(e) => setusecase(e.target.value)}
-          >
-            <option value="">Select UseCases</option>
-            {UseCases.map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-          </select>
+      <form action="" className="space-y-6 rounded-2xl border border-border bg-card p-5 shadow-xs sm:p-8" onSubmit={createtemplate}>
+        <div className="border-b border-border/60 pb-4">
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
+            {_id ? "Edit Template" : "Upload New Template"}
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Provide the details and preview images of your template
+          </p>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+
+        <div className="space-y-2">
+          <Label htmlFor="template-name">Template Name</Label>
           <Input
-            type="url"
-            placeholder="Github Repository Link"
-            value={githubrepolink}
-            onChange={(e) => setgithubrepolink(e.target.value)}
-          />
-          <Input
-            type="url"
-            placeholder="Deployed Link"
-            value={deployedlink}
-            onChange={(e) => setdeployedlink(e.target.value)}
+            id="template-name"
+            type="text"
+            placeholder="e.g. Modern SaaS Landing Page"
+            value={title}
+            required
+            onChange={(e) => settitle(e.target.value)}
           />
         </div>
-        <div className="grid w-full items-center gap-2">
-          <Label htmlFor="template-images">Template images</Label>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          <div className="space-y-2">
+            <Label htmlFor="select-framework">Framework</Label>
+            <select
+              id="select-framework"
+              className={selectClassName}
+              value={framework}
+              required
+              onChange={(e) => setframework(e.target.value)}
+            >
+              <option value="">Select Framework</option>
+              {Webframeworks.map((f) => (
+                <option key={f} value={f}>
+                  {f}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="select-css">CSS Framework</Label>
+            <select
+              id="select-css"
+              className={selectClassName}
+              value={cssframework}
+              required
+              onChange={(e) => setcssframework(e.target.value)}
+            >
+              <option value="">Select CSS</option>
+              {CSSFrameworks.map((f) => (
+                <option key={f} value={f}>
+                  {f}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="select-usecase">Use Case</Label>
+            <select
+              id="select-usecase"
+              className={selectClassName}
+              value={usecase}
+              required
+              onChange={(e) => setusecase(e.target.value)}
+            >
+              <option value="">Select Use Case</option>
+              {UseCases.map((f) => (
+                <option key={f} value={f}>
+                  {f}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="github-link">GitHub Repository Link</Label>
+            <Input
+              id="github-link"
+              type="url"
+              placeholder="https://github.com/username/repository"
+              value={githubrepolink}
+              onChange={(e) => setgithubrepolink(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="live-link">Live Deployed URL</Label>
+            <Input
+              id="live-link"
+              type="url"
+              placeholder="https://my-template.vercel.app"
+              value={deployedlink}
+              onChange={(e) => setdeployedlink(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="template-images">Template Images (Screenshots)</Label>
           <Input id="template-images" type="file" accept="image/*" multiple onChange={upload} />
-          {/* selected images yha bshow krna hai  */}
+
           {uploading && (
-            <div>
+            <div className="flex items-center justify-center p-8 bg-muted/20 rounded-xl border border-dashed border-border">
               <Spinner />
+              <span className="ml-3 text-sm text-muted-foreground">Uploading images...</span>
             </div>
           )}
-          {!uploading && (
-            <div className="w-full">
+
+          {!uploading && images.length > 0 && (
+            <div className="w-full pt-2">
               <ReactSortable
                 list={Array.isArray(images) ? images : []}
                 setList={updateImagesOrder}
@@ -244,37 +271,51 @@ const TemplateForm = ({
               >
                 {Array.isArray(images) &&
                   images.map((link, index) => (
-                    <div className="relative" key={link}>
+                    <div className="relative aspect-video overflow-hidden rounded-xl border border-border bg-muted group" key={link}>
                       <Image
                         src={link}
                         alt={`Template preview ${index + 1}`}
-                        width={800}
-                        height={600}
-                        className="h-full w-full rounded-md border object-cover p-2 transition-transform duration-300 group-hover:scale-110"
+                        fill
+                        unoptimized
+                        className="object-cover"
                       />
-                      <div className="absolute top-3 right-3 cursor-pointer opacity-100">
-                          <Button type="button" size="icon" variant="destructive" aria-label={`Delete image ${index + 1}`} onClick={() => handledeleteimage(index)}>
-                          <Trash className="w-4 h-4 bg-white text-red-600 rounded-full p-1" />
-                        </Button>
-                      </div>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="destructive"
+                        className="absolute top-2.5 right-2.5 h-7 w-7 rounded-full shadow-md"
+                        aria-label={`Delete image ${index + 1}`}
+                        onClick={() => handledeleteimage(index)}
+                      >
+                        <Trash size={13} />
+                      </Button>
                     </div>
                   ))}
               </ReactSortable>
             </div>
           )}
         </div>
-        <ReactQuill
-          value={description}
-          onChange={(newvalue) => setdescription(newvalue)}
-          theme="snow"
-          modules={Modules}
-          formats={formats}
-          placeholder="Describe about your template"
-          className="flex-grow my-3 h-auto"
-        />
-        <Button type="submit">
-          {_id ? "Update Template" : "Create Template"}
-        </Button>
+
+        <div className="space-y-2">
+          <Label>Detailed Description</Label>
+          <div className="rounded-xl overflow-hidden border border-border">
+            <ReactQuill
+              value={description}
+              onChange={(newvalue) => setdescription(newvalue)}
+              theme="snow"
+              modules={Modules}
+              formats={formats}
+              placeholder="Describe your template features, prerequisites, setup instructions..."
+              className="bg-card min-h-[180px]"
+            />
+          </div>
+        </div>
+
+        <div className="pt-2 flex justify-end">
+          <Button type="submit" disabled={isSubmitting || uploading} size="lg" className="w-full sm:w-auto px-8">
+            {isSubmitting ? "Saving..." : _id ? "Update Template" : "Create Template"}
+          </Button>
+        </div>
       </form>
     </>
   );

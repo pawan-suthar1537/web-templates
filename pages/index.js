@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import Showtemplates from "@/components/Showtemplates";
+import Footer from "@/components/Footer";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useUser } from "@clerk/nextjs";
@@ -284,25 +285,18 @@ export default function Home() {
         </div>
 
         <div ref={heroCopyRef} data-hero-copy className="relative z-10 mx-auto max-w-5xl text-center [transform-style:preserve-3d]">
-          <span
-            data-hero-line
-            className="mb-4 inline-flex items-center justify-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary shadow-sm"
-          >
-            <Cloud size={14} strokeWidth={2} />
-            Developer Templates for Modern Projects
-          </span>
+          <div ref={heroIconRef} data-hero-icon className="relative z-10 mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-card/90 shadow-md backdrop-blur [transform-style:preserve-3d]">
+            <Box size={32} strokeWidth={2.2} className="text-primary" />
+          </div>
           <h1
             data-hero-line
-            className="mb-8 text-4xl font-black leading-[1.05] tracking-tighter sm:text-5xl md:text-7xl lg:text-8xl"
+            className="mb-6 text-4xl font-black leading-tight tracking-tight sm:text-6xl md:text-7xl lg:text-8xl text-foreground"
           >
             Build faster with{" "}
-            <span className="relative block bg-gradient-to-r from-green-500 via-indigo-500 to-red-500 bg-clip-text text-transparent">
+            <span className="relative inline-block text-primary underline decoration-primary/20 underline-offset-8">
               premium code templates
             </span>
           </h1>
-          <div ref={heroIconRef} data-hero-icon className="relative z-10 mx-auto mb-8 inline-flex h-20 w-20 items-center justify-center rounded-2xl border border-border bg-card/80 shadow-lg backdrop-blur [transform-style:preserve-3d]">
-            <Box size={40} strokeWidth={2.5} className="text-primary" />
-          </div>
           <p
             data-hero-sub
             className="mx-auto mb-10 max-w-[65ch] text-base leading-relaxed text-muted-foreground sm:mb-12 sm:text-lg md:text-xl"
@@ -332,7 +326,7 @@ export default function Home() {
                 >
                   <Link href="/dashboard/projects/new">
                     <Plus size={18} className="mr-2" />
-                    + Upload Template
+                    Upload Template
                   </Link>
                 </Button>
               </>
@@ -346,6 +340,7 @@ export default function Home() {
                   <Link href="/login">Get started free</Link>
                 </Button>
                 <Button
+                  asChild
                   variant="outline"
                   size="lg"
                   className="w-full rounded-full border border-border px-8 py-4 text-base font-bold transition-colors hover:bg-muted sm:w-auto sm:px-10 sm:text-lg"
@@ -509,12 +504,12 @@ export default function Home() {
                 Hand-picked templates ready for your next project.
               </p>
             </div>
-            <Link
-              href="/templates"
+            <a
+              href="#featured-templates"
               className="text-sm font-semibold text-primary hover:underline flex items-center gap-2"
             >
-              View all <Zap size={16} strokeWidth={2} />
-            </Link>
+              Latest releases <Zap size={16} strokeWidth={2} />
+            </a>
           </div>
           <Showtemplates />
         </div>
@@ -532,7 +527,7 @@ export default function Home() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 text-green-600 text-xs font-bold mb-8 border border-green-500/20">
             <span>New templates added weekly</span>
           </div>
-          <h2 data-cta-el className="text-4xl md:text-6xl font-black tracking-tight mb-6">
+          <h2 data-cta-el className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-foreground">
             Ready to ship your next project?
           </h2>
           <p data-cta-el className="text-muted-foreground text-lg mb-12 max-w-[50ch] mx-auto leading-relaxed">
@@ -545,7 +540,7 @@ export default function Home() {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-full px-12 py-5 font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 hover:shadow-primary/40 transition-all border-0"
+                  className="w-full sm:w-auto rounded-full px-10 py-5 font-bold text-lg shadow-xl shadow-primary/25 hover:scale-105 hover:shadow-primary/35 transition-all border-0"
                 >
                   <Link href="/dashboard">
                     <LayoutDashboard size={20} className="mr-2" />
@@ -556,11 +551,11 @@ export default function Home() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="rounded-full px-12 py-5 font-bold text-lg transition-all border-primary hover:bg-primary/5"
+                  className="w-full sm:w-auto rounded-full px-10 py-5 font-bold text-lg transition-all border-primary hover:bg-primary/5"
                 >
                   <Link href="/dashboard/projects/new">
                     <Plus size={20} className="mr-2" />
-                    + Upload Template
+                    Upload Template
                   </Link>
                 </Button>
               </>
@@ -569,7 +564,7 @@ export default function Home() {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-full px-12 py-5 font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 hover:shadow-primary/40 transition-all border-0"
+                  className="w-full sm:w-auto rounded-full px-12 py-5 font-bold text-lg shadow-xl shadow-primary/25 hover:scale-105 hover:shadow-primary/35 transition-all border-0"
                 >
                   <Link href="/login">Get started free</Link>
                 </Button>
@@ -578,6 +573,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }
